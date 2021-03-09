@@ -1,0 +1,197 @@
+import os
+
+# process ID
+print(os.getpid())
+
+# user ID
+print(os.getuid())
+
+# group ID
+print(os.getgid())
+
+# 현재 작업중인 디렉토리
+print(os.getcwd())
+
+ps -ef | grep 5774
+
+import timeit
+        
+def f1():
+    s = set(range(100))
+
+    
+def f2():
+    l = list(range(100))
+
+    
+def f3():
+    t = tuple(range(100))
+
+
+def f4():
+    s = str(range(100))
+
+    
+def f5():
+    s = set()
+    for i in range(100):
+        s.add(i)
+
+def f6():
+    l = []
+    for i in range(100):
+        l.append(i)
+    
+def f7():
+    s_comp = {i for i in range(100)}
+
+    
+def f8():
+    l_comp = [i for i in range(100)]
+    
+
+if __name__ == "__main__":
+    t1 = timeit.Timer("f1()", "from __main__ import f1")
+    t2 = timeit.Timer("f2()", "from __main__ import f2")
+    t3 = timeit.Timer("f3()", "from __main__ import f3")
+    t4 = timeit.Timer("f4()", "from __main__ import f4")
+    t5 = timeit.Timer("f5()", "from __main__ import f5")
+    t6 = timeit.Timer("f6()", "from __main__ import f6")
+    t7 = timeit.Timer("f7()", "from __main__ import f7")
+    t8 = timeit.Timer("f8()", "from __main__ import f8")
+    print("set               :", t1.timeit(), '[ms]')
+    print("list              :", t2.timeit(), '[ms]')
+    print("tuple             :", t3.timeit(), '[ms]')
+    print("string            :", t4.timeit(), '[ms]')
+    print("set_add           :", t5.timeit(), '[ms]')
+    print("list_append       :", t6.timeit(), '[ms]')
+    print("set_comprehension :", t5.timeit(), '[ms]')
+    print("list_comprehension:", t6.timeit(), '[ms]')
+
+    class Delivery:
+	def run(self):
+		print("delivery")
+
+class RetriveDish:
+	def run(self):
+		print("Retriving Dish")
+
+work1 = Delivery()
+work2 = RetriveDish()
+
+def main():
+	work1.run()
+	work2.run()
+
+if __name__ == '__main__':
+    main()
+
+from threading import *
+
+class Delivery(Thread):
+	def run(self):
+		print("delivery")
+
+class RetriveDish(Thread):
+	def run(self):
+		print("Retriving Dish")
+
+work1 = Delivery()
+work2 = RetriveDish()
+
+def main():
+	work1.run()
+	work2.run()
+
+if __name__ == '__main__':
+    main()
+
+from threading import *
+
+class Delivery:
+    def run(self):
+        print("delivering")
+
+work1 = Delivery()
+print(work1.run)
+
+class Delivery(Thread):
+    def run(self):
+        print("delivering")
+
+work2 = Delivery()
+print(work2.run)
+
+from threading import *
+from time import sleep
+
+Stopped = False
+
+def worker(work, sleep_sec):    # 일꾼 스레드입니다.
+    while not Stopped:   # 그만 하라고 할때까지
+        print('do ', work)    # 시키는 일을 하고
+        sleep(sleep_sec)    # 잠깐 쉽니다.
+    print('retired..')           # 언젠가 이 굴레를 벗어나면, 은퇴할 때가 오겠지요?
+        
+t = Thread(target=worker, args=('Overwork', 3))    # 일꾼 스레드를 하나 생성합니다. 열심히 일하고 3초간 쉽니다.
+t.start()    # 일꾼, 이제 일을 해야지? 😈
+
+# 이 코드 블럭을 실행하기 전까지는 일꾼 스레드는 종료하지 않습니다. 
+Stopped = True    # 일꾼 일 그만하라고 세팅해 줍시다. 
+t.join()                    # 일꾼 스레드가 종료할때까지 기다립니다. 
+print('worker is gone.')
+
+from concurrent.futures import ThreadPoolExecutor
+
+class Delivery:
+    def run(self):
+        print("delivering")
+w = Delivery()
+
+with ThreadPoolExecutor() as executor:
+    future = executor.submit(w.run)
+
+from multiprocessing import Pool
+from os import getpid
+
+def double(i):
+    print("I'm process ", getpid())    # pool 안에서 이 메소드가 실행될 때 pid를 확인해 봅시다.
+    return i * 2
+
+with Pool() as pool:
+      result = pool.map(double, [1, 2, 3, 4, 5])
+      print(result)
+
+import math
+import concurrent
+
+PRIMES = [
+    112272535095293,
+    112582705942171,
+    112272535095293,
+    115280095190773,
+    115797848077099,
+    1099726899285419]
+
+def is_prime(n):
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+
+    sqrt_n = int(math.floor(math.sqrt(n)))
+    for i in range(3, sqrt_n + 1, 2):
+        if n % i == 0:
+            return False
+    return True
+
+def main():
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for number, prime in zip(PRIMES, executor.map(is_prime, PRIMES)):
+            print('%d is prime: %s' % (number, prime))
+
+if __name__ == '__main__':
+    main()
+    
